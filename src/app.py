@@ -3,23 +3,15 @@ from aiohttp import web
 from src._constants import (
     NESTED_URL_NAME,
     NESTED_URL_REGEX,
-    UPSTREAM_IP,
-    UPSTREAM_PORT,
-    UPSTREAM_SCHEME,
 )
-from src.utils.request import clone as clone_request
+from src.utils.buissness_logic import create_upstream_request
 
 _routes = web.RouteTableDef()
 
 
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request):
-    upstream_request = clone_request(
-        request,
-        new_host=UPSTREAM_IP,
-        new_port=UPSTREAM_PORT,
-        new_scheme=UPSTREAM_SCHEME,
-    )
+    upstream_request = create_upstream_request(request)
 
     print(request.url.port, upstream_request.url.port)
 
