@@ -19,9 +19,9 @@ To create non-transparent proxy I need a server and a client.
 [aiohttp.Client](https://docs.aiohttp.org/en/stable/client.html) is my client of choice.
 
 
-Proxy needs upstream service to talk to.
+To perform tests I need an upstream address.
 
-Custom upstream is my choice mainly to make e2e tests easier and quicker, upstream logic:
+Creating custom upstream is my choice mainly to make e2e tests easier and quicker, upstream logic:
    1. receive post request
    2. respond with the same payload as in post request
 
