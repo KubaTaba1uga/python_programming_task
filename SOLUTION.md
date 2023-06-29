@@ -169,3 +169,13 @@ I'll go for all bonus points ;)
    The original HTTP/1.0 form of persistent connections (the Connection:
    Keep-Alive and Keep-Alive header) is documented in RFC 2068. [33]
 ```
+
+# Important info from [RFC7519](https://www.ietf.org/rfc/rfc7519.txt)https://www.ietf.org/rfc/rfc7519.txt
+```
+4.1.6.  "iat" (Issued At) Claim
+
+   The "iat" (issued at) claim identifies the time at which the JWT was
+   issued.  This claim can be used to determine the age of the JWT.  Its
+   value MUST be a number containing a NumericDate value.  Use of this
+   claim is OPTIONAL.
+```
