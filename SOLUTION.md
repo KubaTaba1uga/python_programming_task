@@ -2,14 +2,14 @@
 
 ## Intro
 
-My first solution goals are: robustness and development time.
+My solution goals are: robustness and development time.
 
 To achive that I: want to write as little code as it is possible. All tasks besides buissness logic will be provided by external packages.
 
 ## Solution
 
 ### Glossary
-  - app - proxy about which talk is about in task description
+  - app - proxy described in README.md
   - user - third party actor, can be human can be machine
   - upstream - location where request should be send to by the app, combination of: ip or fqd, port
 
@@ -26,6 +26,8 @@ Custom upstream is my choice mainly to make e2e tests easier and quicker, upstre
    2. respond with the same payload as in post request
 
 ### Alghoritm
+
+#### Proxy
  1. User makes http request <br>
   1.1 User makes http request to the app <br>
   1.2 App receives http request <br>
