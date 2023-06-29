@@ -1,9 +1,11 @@
 from aiohttp import web
 
+from src._constants import NESTED_URL_NAME, NESTED_URL_REGEX
+
 _routes = web.RouteTableDef()
 
 
-@_routes.post("/{local_path:.*}")
+@_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request):
     return web.Response(text="Hello, world")
 
