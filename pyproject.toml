@@ -11,6 +11,7 @@ classifiers = [
 ]
 version = "0.0.1"
 dependencies = [
+ "aiohttp==3.8.4"
 ]
 
 
