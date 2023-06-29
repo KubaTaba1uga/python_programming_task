@@ -4,7 +4,7 @@ from src._constants import (
     NESTED_URL_NAME,
     NESTED_URL_REGEX,
 )
-from src.utils.buissness_logic import create_upstream_request
+from src.buissness_logic import create_upstream_request, handle_upstream_request
 
 _routes = web.RouteTableDef()
 
@@ -12,6 +12,7 @@ _routes = web.RouteTableDef()
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request):
     upstream_request = create_upstream_request(request)
+    handle_upstream_request(upstream_request)
 
     print(request.url.port, upstream_request.url.port)
 
