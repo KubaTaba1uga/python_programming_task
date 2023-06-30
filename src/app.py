@@ -9,7 +9,7 @@ _routes = _web.RouteTableDef()
 
 
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
-async def proxy(request):
+async def proxy(request: _web.Request) -> _web.Response:
     upstream_request = create_upstream_request(request)
     handle_upstream_request(upstream_request)
 
@@ -22,5 +22,5 @@ _app = _web.Application()
 _app.add_routes(_routes)
 
 
-def run_app():
+def run_app() -> None:
     _web.run_app(_app)

@@ -53,7 +53,7 @@ def generate_datetime_value() -> datetime:
     return datetime.now()
 
 
-def generate_jwt(claims) -> str:
+def generate_jwt(claims: dict) -> str:
     return _jwt.encode(
         payload=claims,
         # satisfies task requirement about `hex as a secret`
