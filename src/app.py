@@ -11,8 +11,7 @@ _routes = _web.RouteTableDef()
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request: _web.Request) -> _web.Response:
     upstream_request = create_upstream_request(request)
-
-    print(upstream_request.headers)
+    # make_upstream_request(upstream_request)
 
     return _web.Response(text="Hello, world")
 

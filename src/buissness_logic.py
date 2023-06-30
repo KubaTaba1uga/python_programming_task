@@ -81,3 +81,6 @@ def generate_unique_value() -> str:
 
 def generate_today_date() -> str:
     return format_datetime_date(generate_now())
+
+
+def make_upstream_request
