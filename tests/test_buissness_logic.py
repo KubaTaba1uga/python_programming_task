@@ -1,13 +1,13 @@
-from unittest.mock import patch, MagicMock
 from datetime import datetime
-
-from src._constants import JWT_HEADER_NAME
-from src.buissness_logic import generate_upstream_jwt
-from src.buissness_logic import generate_unique_value
-from src.buissness_logic import generate_today_date
-from src.buissness_logic import generate_upstream_headers
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import tests.utils.jwt as jwt_utils
+from src._constants import JWT_HEADER_NAME
+from src.buissness_logic import generate_today_date
+from src.buissness_logic import generate_unique_value
+from src.buissness_logic import generate_upstream_headers
+from src.buissness_logic import generate_upstream_jwt
 
 
 def test_generate_today_date():

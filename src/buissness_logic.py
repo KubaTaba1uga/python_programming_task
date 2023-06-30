@@ -1,25 +1,18 @@
-import uuid
-import typing
-from datetime import datetime
-
-
 from aiohttp import web as _web
 from multidict import CIMultiDict
 
+from src._constants import HEX_STRING_SECRET
+from src._constants import JWT_HEADER_NAME
+from src._constants import SIGNATURE_ALGHORITM
 from src._constants import UPSTREAM_IP
 from src._constants import UPSTREAM_PORT
 from src._constants import UPSTREAM_SCHEME
-from src._constants import JWT_HEADER_NAME
-from src._constants import HEX_STRING_SECRET
-from src._constants import SIGNATURE_ALGHORITM
-from src.utils.request import clone as clone_request
-from src.utils.datetime import (
-    generate_now,
-    format_datetime_date,
-    generate_seconds_since_epoch,
-)
-from src.utils.uuid import generate_uuid
+from src.utils.datetime import format_datetime_date
+from src.utils.datetime import generate_now
+from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
+from src.utils.request import clone as clone_request
+from src.utils.uuid import generate_uuid
 
 
 def create_upstream_request(request: _web.Request) -> _web.Request:
