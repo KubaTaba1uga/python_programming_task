@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from src.buissness_logic import generate_unique_value
+import tests.utils.jwt as jwt_utils
 from src.buissness_logic import generate_datetime_value
 from src.buissness_logic import generate_jwt
-
-import tests.utils.jwt as jwt_utils
+from src.buissness_logic import generate_unique_value
 
 
 def test_generate_unique_value():

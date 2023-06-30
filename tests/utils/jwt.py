@@ -1,6 +1,7 @@
 import jwt as _jwt
 
-from src._constants import HEX_STRING_SECRET, SIGNATURE_ALGHORITM
+from src._constants import HEX_STRING_SECRET
+from src._constants import SIGNATURE_ALGHORITM
 
 
 def decode(jwt_value):

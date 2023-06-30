@@ -3,13 +3,11 @@ from datetime import datetime
 
 import jwt as _jwt
 
-from src._constants import (
-    UPSTREAM_IP,
-    UPSTREAM_PORT,
-    UPSTREAM_SCHEME,
-    HEX_STRING_SECRET,
-    SIGNATURE_ALGHORITM,
-)
+from src._constants import HEX_STRING_SECRET
+from src._constants import SIGNATURE_ALGHORITM
+from src._constants import UPSTREAM_IP
+from src._constants import UPSTREAM_PORT
+from src._constants import UPSTREAM_SCHEME
 from src.utils.request import clone as clone_request
 
 
