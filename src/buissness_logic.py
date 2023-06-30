@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 import jwt as _jwt
-from aiohhtp import web as _web
+from aiohttp import web as _web
 
 from src._constants import HEX_STRING_SECRET
 from src._constants import SIGNATURE_ALGHORITM

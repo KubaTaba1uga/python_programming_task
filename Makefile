@@ -21,7 +21,7 @@ format:
 	python -m black $(sources)
 	python -m isort $(sources)
 
-tests:
+test:
 	python -m pytest -vv
 
 venv:
