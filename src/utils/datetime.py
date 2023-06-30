@@ -2,9 +2,9 @@ from datetime import datetime
 from time import time
 
 
-def format_datetime(datetime_value: datetime) -> str:
-    DATETIME_NOTATION = "%Y-%M-%d"
-    return datetime_value.strftime(DATETIME_NOTATION)
+def format_datetime_date(datetime_value: datetime) -> str:
+    DATE_NOTATION = "%Y-%M-%d"
+    return datetime_value.strftime(DATE_NOTATION)
 
 
 def generate_now() -> datetime:

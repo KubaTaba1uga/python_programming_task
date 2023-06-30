@@ -10,10 +10,12 @@ from src._constants import UPSTREAM_IP
 from src._constants import UPSTREAM_PORT
 from src._constants import UPSTREAM_SCHEME
 from src._constants import JWT_HEADER_NAME
+from src._constants import HEX_STRING_SECRET
+from src._constants import SIGNATURE_ALGHORITM
 from src.utils.request import clone as clone_request
 from src.utils.datetime import (
     generate_now,
-    format_datetime,
+    format_datetime_date,
     generate_seconds_since_epoch,
 )
 from src.utils.uuid import generate_uuid
@@ -31,6 +33,17 @@ def create_upstream_request(request: _web.Request) -> _web.Request:
 
 
 def generate_upstream_headers(request: _web.Request) -> CIMultiDict:
+    NEW_HEADERS_VALUES_MAP = {JWT_HEADER_NAME: generate_upstream_jwt()}
+
+    mutable_headers = CIMultiDict(request.headers)
+
+    for header, value in NEW_HEADERS_VALUES_MAP.items():
+        mutable_headers[header] = value
+
+    return mutable_headers
+
+
+def generate_upstream_jwt():
     jwt_claims = {
         # satisfies task requirement for `jti`
         "jti": generate_unique_value(),
@@ -44,25 +57,23 @@ def generate_upstream_headers(request: _web.Request) -> CIMultiDict:
             #  TO-DO
             #  - get logged in `user` from request
             "user": "username",
-            "date": _generate_today(),
+            "date": _generate_today_date(),
         },
     }
 
-    new_headers, jwt_value = CIMultiDict(request.headers), generate_jwt(jwt_claims)
-
-    _inject_jwt_to_headers(jwt_value, new_headers)
-
-    return new_headers
+    return generate_jwt(
+        claims=jwt_claims,
+        # satisfies task requirement for `hex as a secret`
+        secret=HEX_STRING_SECRET,
+        # satisfies task requirement for `HS512`
+        algorithm=SIGNATURE_ALGHORITM,
+    )
 
 
 def generate_unique_value() -> str:
+    # I want to keep things simple, that's why uuid.
     return generate_uuid()
 
 
-def _generate_today() -> str:
-    return format_datetime(generate_now())
-
-
-def _inject_jwt_to_headers(jwt: str, headers: "CIMultiDict") -> None:
-    # satisfies task requirement for `x-my-jwt`
-    headers[JWT_HEADER_NAME] = jwt
+def _generate_today_date() -> str:
+    return format_datetime_date(generate_now())
