@@ -1,11 +1,13 @@
 FROM python:3.11.4-slim-bullseye
 
-COPY requirements.txt /app/
-RUN pip install -r /app/requirements.txt
+WORKDIR /app
 
-COPY start.py /app/
-COPY src /app/src
+COPY requirements.txt .
+RUN pip install -r ./requirements.txt
+
+COPY start.py .
+COPY src ./src
 
 EXPOSE 8080
 
-CMD ["/app/start.py"]
+CMD ["./start.py"]
