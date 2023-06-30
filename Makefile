@@ -1,5 +1,6 @@
 venv_name := .venv
 sources := src tests upstream
+services := app upstream
 
 help:
 	@echo "lint - check style with ruff and mypy"
@@ -12,6 +13,8 @@ help:
 	@echo "clean - remove venv"	
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-git - remove ignored and not ignored files"
+	@echo "build - build docker images"
+	@echo "run - run docker images"
 
 lint:
 	python -m ruff $(sources)
@@ -46,3 +49,9 @@ clean-pyc:
 
 clean-git:
 	git clean -fxd
+
+build:
+	sudo docker-compose build $(services)
+
+run:
+	sudo docker-compose up
