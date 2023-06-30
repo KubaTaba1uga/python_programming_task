@@ -3,7 +3,7 @@ from time import time
 
 
 def format_datetime_date(datetime_value: datetime) -> str:
-    DATE_NOTATION = "%Y-%M-%d"
+    DATE_NOTATION = "%Y-%m-%d"
     return datetime_value.strftime(DATE_NOTATION)
 
 

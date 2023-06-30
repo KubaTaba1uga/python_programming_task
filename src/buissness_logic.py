@@ -58,7 +58,7 @@ def generate_upstream_jwt():
             #  TO-DO
             #  - get logged in `user` from request
             "user": "username",
-            "date": _generate_today_date(),
+            "date": generate_today_date(),
         },
     }
 
@@ -76,5 +76,5 @@ def generate_unique_value() -> str:
     return generate_uuid()
 
 
-def _generate_today_date() -> str:
+def generate_today_date() -> str:
     return format_datetime_date(generate_now())
