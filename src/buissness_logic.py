@@ -23,14 +23,14 @@ def create_upstream_request(request: _web.Request) -> _web.Request:
 
 def handle_upstream_request(request: _web.Request) -> _web.Request:
     jwt_claims, _ = {
-        # satisfies task requirement about `jti`
+        # satisfies task requirement for `jti`
         "jti": generate_unique_value(),
-        # satisfies task requirement about `ati`
+        # satisfies task requirement for `ati`
         "iat": generate_datetime_value(),
     }, {
-        # satisfies task requirement about `payload`.
+        # satisfies task requirement for `payload`.
         #  Propably `user` should be generated but
-        #  that would require sharing db with upstream
+        #  that would require sharing db with upstream.
         #  I want to keep things simple for POC.
         #  TO-DO
         #  - get logged in `user` from request
@@ -39,8 +39,6 @@ def handle_upstream_request(request: _web.Request) -> _web.Request:
     }
 
     jwt_value = generate_jwt(jwt_claims)
-
-    print(jwt_value)
 
     return request
 
@@ -56,8 +54,8 @@ def generate_datetime_value() -> datetime:
 def generate_jwt(claims: dict) -> str:
     return _jwt.encode(
         payload=claims,
-        # satisfies task requirement about `hex as a secret`
+        # satisfies task requirement for `hex as a secret`
         key=HEX_STRING_SECRET,
-        # satisfies task requirement about `HS512`
+        # satisfies task requirement for `HS512`
         algorithm=SIGNATURE_ALGHORITM,
     )
