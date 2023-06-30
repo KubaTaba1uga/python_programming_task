@@ -1,5 +1,5 @@
-UPSTREAM_IP = "0.0.0.0"
-UPSTREAM_PORT = "12"
+UPSTREAM_IP_OR_FQDN = "upstream"
+UPSTREAM_PORT = "8080"
 UPSTREAM_SCHEME = "http"
 
 NESTED_URL_NAME = "nested_url"
@@ -15,3 +15,5 @@ HEX_STRING_SECRET = (
 SIGNATURE_ALGHORITM = "HS512"
 
 JWT_HEADER_NAME = "x-my-jwt"
+
+URL_NOTATION = "{scheme}://{host}:{port}/{path}"

@@ -1,24 +1,30 @@
 from aiohttp import web as _web
+
+from aiohttp import Response as _Response
 from multidict import CIMultiDict
 
 from src._constants import HEX_STRING_SECRET
 from src._constants import JWT_HEADER_NAME
 from src._constants import SIGNATURE_ALGHORITM
-from src._constants import UPSTREAM_IP
+from src._constants import UPSTREAM_IP_OR_FQDN
 from src._constants import UPSTREAM_PORT
 from src._constants import UPSTREAM_SCHEME
+from src._constants import URL_NOTATION
 from src.utils.datetime import format_datetime_date
 from src.utils.datetime import generate_now
 from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
 from src.utils.request import clone as clone_request
+from src.utils.request import get_path as get_request_path
+from src.utils.request import get_data as get_request_data
+from src.utils.request import make as make_request
 from src.utils.uuid import generate_uuid
 
 
 def create_upstream_request(request: _web.Request) -> _web.Request:
     return clone_request(
         request,
-        new_host=UPSTREAM_IP,
+        new_host=UPSTREAM_IP_OR_FQDN,
         new_port=UPSTREAM_PORT,
         new_scheme=UPSTREAM_SCHEME,
         new_headers=generate_upstream_headers(request),
@@ -76,4 +82,18 @@ def generate_today_date() -> str:
     return format_datetime_date(generate_now())
 
 
-# def make_upstream_request
+async def make_upstream_request(request: _web.Request) -> _web.Response:
+    upstream_url = URL_NOTATION.format(
+        scheme=UPSTREAM_SCHEME,
+        host=UPSTREAM_IP_OR_FQDN,
+        port=UPSTREAM_PORT,
+        path=get_request_path(request)[1:],
+    )
+
+    upstream_response = await make_request(request, upstream_url)
+
+    return
+
+
+def convert_client_response_to_server_response(request: _Response) -> _web.Response:
+    pass
