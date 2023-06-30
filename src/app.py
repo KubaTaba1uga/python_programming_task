@@ -14,14 +14,6 @@ async def proxy(request):
     upstream_request = create_upstream_request(request)
     handle_upstream_request(upstream_request)
 
-    print(request.url.port, upstream_request.url.port)
-
-    # for arg in dir(request):
-    #     try:
-    #         print(arg, getattr(request, arg))
-    #     except AttributeError:
-    #         continue
-
     return web.Response(text="Hello, world")
 
 

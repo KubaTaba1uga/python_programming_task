@@ -1,9 +1,7 @@
 import uuid
 from datetime import datetime
 
-# from jwcrypto import jwk
-import python_jwt as jwt
-from jwcrypto.jwk import JWK as PrivateKey
+import jwt as _jwt
 
 from src._constants import (
     UPSTREAM_IP,
@@ -41,7 +39,9 @@ def handle_upstream_request(request):
         "date": "todays date",
     }
 
-    jwt = generate_jwt(jwt_claims)
+    jwt_value = generate_jwt(jwt_claims)
+
+    print(jwt_value)
 
     return request
 
@@ -54,15 +54,11 @@ def generate_datetime_value() -> datetime:
     return datetime.now()
 
 
-def generate_jwt(claims):
-    return jwt.generate_jwt(
-        claims=claims,
+def generate_jwt(claims) -> str:
+    return _jwt.encode(
+        payload=claims,
         # satisfies task requirement about `hex as a secret`
-        priv_key=generate_private_key(),
+        key=HEX_STRING_SECRET,
         # satisfies task requirement about `HS512`
         algorithm=SIGNATURE_ALGHORITM,
     )
-
-
-def generate_private_key() -> PrivateKey:
-    return PrivateKey.from_password(HEX_STRING_SECRET)
