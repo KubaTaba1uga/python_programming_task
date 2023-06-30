@@ -14,6 +14,7 @@ help:
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-git - remove ignored and not ignored files"
 	@echo "build - build docker images"
+	@echo "run - run docker images"
 
 lint:
 	python -m ruff $(sources)
@@ -51,3 +52,6 @@ clean-git:
 
 build:
 	sudo docker-compose build $(services)
+
+run:
+	sudo docker-compose up
