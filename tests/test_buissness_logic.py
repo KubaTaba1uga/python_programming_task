@@ -1,9 +1,11 @@
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from datetime import datetime
 
+from src._constants import JWT_HEADER_NAME
 from src.buissness_logic import generate_upstream_jwt
 from src.buissness_logic import generate_unique_value
 from src.buissness_logic import generate_today_date
+from src.buissness_logic import generate_upstream_headers
 
 import tests.utils.jwt as jwt_utils
 
@@ -59,3 +61,21 @@ def test_generate_upstream_jwt():
     received_claims = jwt_utils.decode(jwt)
 
     assert received_claims == expected_claims
+
+
+def test_generate_upstream_headers():
+    request = MagicMock()
+
+    JWT, request.headers = "whatever", {"foo": "bar", "bar": "foo"}
+
+    expected_value = request.headers
+    expected_value[JWT_HEADER_NAME] = JWT
+
+    with patch("src.buissness_logic.generate_upstream_jwt", lambda: JWT):
+        received_value = generate_upstream_headers(request)
+
+    assert received_value == expected_value
+
+
+# create_upstream_request is tested in test_proxy.py
+# mocking request would be too time consuming.

@@ -36,7 +36,10 @@ def generate_upstream_headers(request: _web.Request) -> CIMultiDict:
     # If new headers are required, just expand the map
     NEW_HEADERS_VALUES_MAP = {JWT_HEADER_NAME: generate_upstream_jwt()}
 
-    mutable_headers = CIMultiDict(request.headers)
+    mutable_headers = CIMultiDict(
+        request.headers
+    )  # i don't see a point of creating interface to basically a dict
+    # that's why CIMultiDict is used directly
 
     for header, value in NEW_HEADERS_VALUES_MAP.items():
         mutable_headers[header] = value
