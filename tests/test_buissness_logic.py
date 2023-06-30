@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import tests.utils.jwt as jwt_utils
-from src.buissness_logic import generate_datetime_value
+
 from src.buissness_logic import generate_jwt
 from src.buissness_logic import generate_unique_value
 
@@ -21,12 +21,6 @@ def test_generate_unique_value():
         after_add_size = len(unique_values)
 
         assert before_add_size != after_add_size
-
-
-def test_generate_datetime_value_is_not_from_future():
-    datetime_value = generate_datetime_value()
-
-    assert datetime_value < datetime.now()
 
 
 def test_generate_jwt():

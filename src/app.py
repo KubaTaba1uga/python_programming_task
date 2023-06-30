@@ -3,7 +3,7 @@ from aiohttp import web as _web
 from src._constants import NESTED_URL_NAME
 from src._constants import NESTED_URL_REGEX
 from src.buissness_logic import create_upstream_request
-from src.buissness_logic import handle_upstream_request
+
 
 _routes = _web.RouteTableDef()
 
@@ -11,7 +11,8 @@ _routes = _web.RouteTableDef()
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request: _web.Request) -> _web.Response:
     upstream_request = create_upstream_request(request)
-    handle_upstream_request(upstream_request)
+
+    print(upstream_request.headers)
 
     return _web.Response(text="Hello, world")
 
