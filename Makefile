@@ -28,7 +28,7 @@ venv:
 	python3 -m virtualenv $(venv_name)
 
 install: 
-	pip install -e .
+	pip install .
 
 install-dev: 
 	pip install -e .[dev]
