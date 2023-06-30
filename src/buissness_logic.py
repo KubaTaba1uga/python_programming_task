@@ -83,4 +83,4 @@ def generate_today_date() -> str:
     return format_datetime_date(generate_now())
 
 
-def make_upstream_request
+# def make_upstream_request
