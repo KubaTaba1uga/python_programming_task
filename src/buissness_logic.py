@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 
 import jwt as _jwt
+from aiohhtp import web as _web
 
 from src._constants import HEX_STRING_SECRET
 from src._constants import SIGNATURE_ALGHORITM
@@ -11,7 +12,7 @@ from src._constants import UPSTREAM_SCHEME
 from src.utils.request import clone as clone_request
 
 
-def create_upstream_request(request):
+def create_upstream_request(request: _web.Request) -> _web.Request:
     return clone_request(
         request,
         new_host=UPSTREAM_IP,
@@ -20,8 +21,8 @@ def create_upstream_request(request):
     )
 
 
-def handle_upstream_request(request):
-    jwt_claims, new_request_payload = {
+def handle_upstream_request(request: _web.Request) -> _web.Request:
+    jwt_claims, _ = {
         # satisfies task requirement about `jti`
         "jti": generate_unique_value(),
         # satisfies task requirement about `ati`
