@@ -38,7 +38,7 @@ async def proxy_request_upstream(
     async with make_request(
         method=user_request.method,
         url=upstream_url,
-        data=user_request.content,
+        data=user_request.content if user_request,
         headers=generate_upstream_headers(user_request),
         cookies=user_request.cookies,
     ) as upstream_response:
@@ -107,8 +107,6 @@ def generate_today_date() -> str:
 def convert_client_response_to_server_response(
     client_response: _ClientResponse,
 ) -> _server.Response:
-    print(dir(f"{client_response=}"))
-
     return _server.StreamResponse(
         status=client_response.status,
         reason=client_response.reason,
