@@ -19,14 +19,38 @@ from src.utils.request import get_path as get_request_path
 from src.utils.uuid import generate_uuid
 
 
-def create_upstream_request(request: _server.Request) -> _server.Request:
-    return clone_request(
-        request,
-        new_host=UPSTREAM_IP_OR_FQDN,
-        new_port=UPSTREAM_PORT,
-        new_scheme=UPSTREAM_SCHEME,
-        new_headers=generate_upstream_headers(request),
+async def proxy_request_upstream(
+    user_request: _server.Request,
+) -> _server.Response:
+    # Normally I would split this function into two smaller ones
+    #   (`make request upstream` & `forward uptream response`)
+    #   but I want to use client while I'm using upstream connection.
+    #   Propably there is some way to do not close a connection
+    #   and hand it over to other function but couldn't find it.
+
+    upstream_url = URL_NOTATION.format(
+        scheme=UPSTREAM_SCHEME,
+        host=UPSTREAM_IP_OR_FQDN,
+        port=UPSTREAM_PORT,
+        path=get_request_path(user_request)[1:],
     )
+
+    async with make_request(
+        method=user_request.method,
+        url=upstream_url,
+        data=user_request.content,
+        headers=generate_upstream_headers(user_request),
+        cookies=user_request.cookies,
+    ) as upstream_response:
+        user_response = convert_client_response_to_server_response(upstream_response)
+
+        await user_response.prepare(user_request)
+
+        await read_client_response_write_server_response(
+            upstream_response, user_response
+        )
+
+    return user_response
 
 
 def generate_upstream_headers(request: _server.Request) -> CIMultiDict:
@@ -80,38 +104,11 @@ def generate_today_date() -> str:
     return format_datetime_date(generate_now())
 
 
-async def make_upstream_request_and_send_user_response(
-    upstream_request: _server.Request,
-    user_request: _server.Request,
-) -> _server.Response:
-    upstream_url = URL_NOTATION.format(
-        scheme=UPSTREAM_SCHEME,
-        host=UPSTREAM_IP_OR_FQDN,
-        port=UPSTREAM_PORT,
-        path=get_request_path(upstream_request)[1:],
-    )
-
-    async with make_request(
-        method=upstream_request.method,
-        url=upstream_url,
-        data=upstream_request.content,
-        headers=upstream_request.headers,
-        cookies=upstream_request.cookies,
-    ) as upstream_response:
-        user_response = convert_client_response_to_server_response(upstream_response)
-
-        await user_response.prepare(user_request)
-
-        await read_client_response_write_server_response(
-            upstream_response, user_response
-        )
-
-    return user_response
-
-
 def convert_client_response_to_server_response(
     client_response: _ClientResponse,
 ) -> _server.Response:
+    print(dir(f"{client_response=}"))
+
     return _server.StreamResponse(
         status=client_response.status,
         reason=client_response.reason,
