@@ -234,7 +234,7 @@ $ curl -v -X POST http://127.0.0.1:8080 -T ubuntu-22.04.2-desktop-amd64.iso --ou
    Keep-Alive and Keep-Alive header) is documented in RFC 2068. [33]
 ```
 
-# Important info from [RFC7519](https://www.ietf.org/rfc/rfc7519.txt)https://www.ietf.org/rfc/rfc7519.txt
+# Important info from [RFC7519](https://www.ietf.org/rfc/rfc7519.txt)https://www.ietf.org/rfc/rfc7519.txt)
 ```
 4.1.6.  "iat" (Issued At) Claim
 
