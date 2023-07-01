@@ -24,5 +24,8 @@ async def make(request, url):
         #  read by chunk
         data=await get_data(request),
         headers=request.headers,
+        cookies=request.cookies,
     ) as response:
-        return response
+        response_body = await get_data(response)
+
+        return response, response_body

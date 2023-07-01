@@ -12,7 +12,12 @@ async def proxy(request: _server.Request) -> _server.Response:
     print("EXECUTING PROXY")
 
     upstream_request = create_upstream_request(request)
+
     upstream_response = await make_upstream_request(upstream_request)
+
+    await upstream_response.prepare(request)
+
+    print("PROXY EXECUTED", flush=True)
 
     return upstream_response
 

@@ -91,20 +91,20 @@ async def make_upstream_request(request: _server.Request) -> _server.Response:
         path=get_request_path(request)[1:],
     )
 
-    upstream_response = await make_request(request, upstream_url)
+    upstream_response, body = await make_request(request, upstream_url)
 
-    return convert_client_response_to_server_response(upstream_response)
+    return await convert_client_response_to_server_response(upstream_response, body)
 
 
 async def convert_client_response_to_server_response(
-    response: _ClientResponse,
+    response: _ClientResponse, body: bytes
 ) -> _server.Response:
     return _server.Response(
-        method=response.method,
-        url=response.url,
-        # reading everything into memory is terrible
+        # reading everything into memory is a terrible idea
         # TO-DO
         #  read by chunk
-        body=await get_response_data(response),
+        body=body,
+        status=response.status,
+        reason=response.reason,
         headers=response.headers,
     )
