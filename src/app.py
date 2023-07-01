@@ -1,6 +1,7 @@
 from aiohttp import web as _server
 
-from src._logging import get_app_logger
+from src._constants import APP_PORT
+from src._logging import get_access_logger
 from src.buissness_logic import (
     proxy_request_upstream,
     get_global_counter,
@@ -34,4 +35,8 @@ _app.add_routes(_routes)
 @create_start_time
 def run_app(start_time) -> None:
     _app["start_time"] = start_time
-    _server.run_app(_app, access_log=get_app_logger())
+    _server.run_app(
+        _app,
+        port=APP_PORT,
+        access_log=get_access_logger(),
+    )

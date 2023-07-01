@@ -135,7 +135,7 @@ async def read_client_response_write_server_response(client_response, server_res
         await server_response.write(chunk)
 
 
-def get_global_counter():
+def get_global_counter() -> int:
     return GlobalCounter.get()
 
 
