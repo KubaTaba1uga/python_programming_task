@@ -19,13 +19,13 @@ async def make(request, url):
     async with _request(
         method=request.method,
         url=url,
-        # reading everything into memory is terrible
-        # TO-DO
-        #  read by chunk
-        data=await get_data(request),
+        data=request.content,
         headers=request.headers,
         cookies=request.cookies,
     ) as response:
+        # reading everything into memory is a terrible idea
+        # TO-DO
+        #  read by chunk
         response_body = await get_data(response)
 
         return response, response_body

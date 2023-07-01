@@ -16,8 +16,6 @@ from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
 from src.utils.request import clone as clone_request
 from src.utils.request import get_path as get_request_path
-from src.utils.request import get_data as get_request_data
-from src.utils.request import get_data as get_response_data
 from src.utils.request import make as make_request
 from src.utils.uuid import generate_uuid
 
@@ -100,9 +98,6 @@ async def convert_client_response_to_server_response(
     response: _ClientResponse, body: bytes
 ) -> _server.Response:
     return _server.Response(
-        # reading everything into memory is a terrible idea
-        # TO-DO
-        #  read by chunk
         body=body,
         status=response.status,
         reason=response.reason,
