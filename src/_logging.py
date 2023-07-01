@@ -1,26 +1,28 @@
 import logging
 import sys
 
+from aiohttp.log import access_logger
 
-def _create_app_handlers():
+
+def _create_access_handlers():
     stdout_handler = logging.StreamHandler(sys.stdout)
 
     return [stdout_handler]
 
 
-def _create_app_logger():
-    logger = logging.getLogger("app")
+def _create_access_logger():
+    logger = access_logger
 
     logger.setLevel(logging.DEBUG)
 
-    for handler in _create_app_handlers():
+    for handler in _create_access_handlers():
         logger.addHandler(handler)
 
     return logger
 
 
-_app_logger = _create_app_logger()
+_access_logger = _create_access_logger()
 
 
-def get_app_logger():
-    return _app_logger
+def get_access_logger():
+    return _access_logger

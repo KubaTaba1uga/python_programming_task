@@ -9,6 +9,8 @@ from src.buissness_logic import generate_today_date
 from src.buissness_logic import generate_unique_value
 from src.buissness_logic import generate_upstream_headers
 from src.buissness_logic import generate_upstream_jwt
+from src.buissness_logic import increment_global_counter
+from src.utils.global_counter import GlobalCounter
 
 
 def test_generate_today_date():
@@ -76,6 +78,36 @@ def test_generate_upstream_headers():
         received_value = generate_upstream_headers(request)
 
     assert received_value == expected_value
+
+
+async def test_increment_global_counter():
+    expected_value = GlobalCounter.get() + 7
+
+    @increment_global_counter
+    async def dummy_func():
+        pass
+
+    for _ in range(expected_value):
+        await dummy_func()
+
+    received_value = GlobalCounter.get()
+
+    assert received_value == expected_value
+
+
+async def test_create_start_time():
+    expected_value, mock = datetime.now(), MagicMock()
+
+    with patch("src.buissness_logic.generate_now", lambda: expected_value):
+        from src.buissness_logic import create_start_time
+
+        @create_start_time
+        def test(*args, **kwargs):
+            mock(*args, **kwargs)
+
+    test()
+
+    mock.assert_called_with(expected_value)
 
 
 # part responsible for talking with upstream is tested in test_proxy.py

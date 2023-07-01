@@ -6,11 +6,7 @@
 from aiohttp import request as make_request
 
 from src._constants import JWT_HEADER_NAME
-from src._constants import URL_NOTATION
-
-
-def get_proxy_url(path):
-    return URL_NOTATION.format(scheme="http", host="127.0.0.1", port="8080", path=path)
+from tests.utils.url import get_proxy_url
 
 
 async def test_proxy_e2e():
