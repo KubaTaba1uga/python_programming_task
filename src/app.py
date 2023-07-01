@@ -2,7 +2,10 @@ from aiohttp import web as _server
 
 from src._constants import NESTED_URL_NAME
 from src._constants import NESTED_URL_REGEX
-from src.buissness_logic import create_upstream_request, make_upstream_request
+from src.buissness_logic import (
+    create_upstream_request,
+    make_upstream_request_and_send_user_response,
+)
 
 _routes = _server.RouteTableDef()
 
@@ -11,15 +14,17 @@ _routes = _server.RouteTableDef()
 async def proxy(request: _server.Request) -> _server.Response:
     print("EXECUTING PROXY")
 
-    upstream_request = create_upstream_request(request)
+    upstream_request, user_request = create_upstream_request(request), request
 
-    upstream_response = await make_upstream_request(upstream_request)
+    user_response = await make_upstream_request_and_send_user_response(
+        upstream_request, user_request
+    )
 
     # await upstream_response.prepare(request)
 
     print("PROXY EXECUTED", flush=True)
 
-    return upstream_response
+    return user_response
 
 
 # create app

@@ -1,6 +1,6 @@
 from aiohttp import web as _server
-
 from aiohttp import ClientResponse as _ClientResponse
+from aiohttp import request as make_request
 from multidict import CIMultiDict
 
 from src._constants import HEX_STRING_SECRET
@@ -16,7 +16,6 @@ from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
 from src.utils.request import clone as clone_request
 from src.utils.request import get_path as get_request_path
-from src.utils.request import make as make_request
 from src.utils.uuid import generate_uuid
 
 
@@ -81,25 +80,45 @@ def generate_today_date() -> str:
     return format_datetime_date(generate_now())
 
 
-async def make_upstream_request(request: _server.Request) -> _server.Response:
+async def make_upstream_request_and_send_user_response(
+    upstream_request: _server.Request,
+    user_request: _server.Request,
+) -> _server.Response:
+    """Reading everything into memory is a terrible idea.
+    I'm keeping upstream connection open while writing response body to user.
+    Each chunk which has been read from upstream is transmitted to user right
+    away (no need for buffer).
+    """
+
     upstream_url = URL_NOTATION.format(
         scheme=UPSTREAM_SCHEME,
         host=UPSTREAM_IP_OR_FQDN,
         port=UPSTREAM_PORT,
-        path=get_request_path(request)[1:],
+        path=get_request_path(upstream_request)[1:],
     )
 
-    upstream_response, body = await make_request(request, upstream_url)
+    async with make_request(
+        method=upstream_request.method,
+        url=upstream_url,
+        data=upstream_request.content,
+        headers=upstream_request.headers,
+        cookies=upstream_request.cookies,
+    ) as upstream_response:
+        user_response = convert_client_response_to_server_response(upstream_response)
 
-    return convert_client_response_to_server_response(upstream_response, body)
+        await user_response.prepare(user_request)
+
+        async for chunk in upstream_response.content.iter_chunked(1024):
+            await user_response.write(chunk)
+
+    return user_response
 
 
 def convert_client_response_to_server_response(
-    response: _ClientResponse, body: bytes
+    client_response: _ClientResponse,
 ) -> _server.Response:
-    return _server.Response(
-        body=body,
-        status=response.status,
-        reason=response.reason,
-        headers=response.headers,
+    return _server.StreamResponse(
+        status=client_response.status,
+        reason=client_response.reason,
+        headers=client_response.headers,
     )
