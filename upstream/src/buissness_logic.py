@@ -5,7 +5,9 @@ async def convert_request_to_response(
     request: _server.Request, status_code: int
 ) -> _server.StreamResponse:
     response = _server.StreamResponse(
-        headers=request.headers, status=status_code, reason="some reason"
+        headers=request.headers,
+        status=status_code,
+        reason="some reason",
     )
 
     await response.prepare(request)

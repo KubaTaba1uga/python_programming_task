@@ -48,6 +48,70 @@ I'll go for all bonus points ;)
 1. write 2.1 in details
 2. write 2.2 in details
 
+### Large Files Handling
+What happens when large file read to memory
+```
+$ curl -v -X POST http://127.0.0.1:8080 -T ubuntu-22.04.2-desktop-amd64.iso --output a
+> POST /ubuntu-22.04.2-desktop-amd64.iso HTTP/1.1
+> Host: 127.0.0.1:8080
+> User-Agent: curl/7.74.0
+> Accept: */*
+> Content-Length: 4927586304
+> Expect: 100-continue
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 100 Continue
+} [65536 bytes data]
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 413 Request Entity Too Large
+< Content-Type: text/plain; charset=utf-8
+< Content-Length: 68
+< Date: Sat, 01 Jul 2023 15:11:26 GMT
+< Server: Python/3.11 aiohttp/3.8.4
+* HTTP error before end of send, stop sending
+< 
+{ [68 bytes data]
+  0 4699M  100    68    0 10.1M    298  44.4M  0:01:45 --:--:--  0:01:45 44.4M
+* Closing connection 0
+```
+What happens when read and send in fly
+```
+$ curl -v -X POST http://127.0.0.1:8080 -T ubuntu-22.04.2-desktop-amd64.iso --output a 
+*   Trying 127.0.0.1:8080...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+> POST /ubuntu-22.04.2-desktop-amd64.iso HTTP/1.1
+> Host: 127.0.0.1:8080
+> User-Agent: curl/7.74.0
+> Accept: */*
+> Content-Length: 4927586304
+> Expect: 100-continue
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 100 Continue
+} [65536 bytes data]
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 some reason
+< Host: 127.0.0.1:8080
+< User-Agent: curl/7.74.0
+< Accept: */*
+< Content-Length: 4927586304
+< Expect: 100-continue
+< x-my-jwt: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmMzc2YzRiNC1jZjVjLTRmMjktODY1MC1iN2UwYWJhODdjMWUiLCJpYXQiOjE2ODgyMjQ0OTMsInBheWxvYWQiOnsidXNlciI6InVzZXJuYW1lIiwiZGF0ZSI6IjIwMjMtMDctMDEifX0.aj8AwCNWNizQFJtEoH4M5EV-8-oP1NU3vQZe3T9QHfdrhwe9dN1KQCDy9_UeApDQehGRo5gRiBDMakwKpw4Cnw
+< Accept-Encoding: gzip, deflate
+< Content-Type: application/octet-stream
+< Date: Sat, 01 Jul 2023 15:14:53 GMT
+< Server: Python/3.11 aiohttp/3.8.4
+< 
+} [65536 bytes data]
+ 98 9398M   98 4608M   98 4631M  99.5M   100M  0:00:47  0:00:46  0:00:01  188M* We are completely uploaded and fine
+{ [3072 bytes data]
+100 9398M  100 4699M  100 4699M  99.3M  99.3M  0:00:47  0:00:47 --:--:--  185M
+* Connection #0 to host 127.0.0.1 left intact
+```
+
+
 # Important info from [RFC2616](https://www.ietf.org/rfc/rfc2616.txt)
 
 ```
