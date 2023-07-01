@@ -1,4 +1,4 @@
-""" Before testing this file execute on one terminal:
+""" Before testing this file, execute on one terminal:
         `make build & make run`
     Then on the other terminal, execute:
         `make test`
