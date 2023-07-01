@@ -3,7 +3,7 @@ from threading import Lock
 
 class GlobalCounter:
     # aiohttp can spawn multiple threads that's why
-    # lock is used
+    # threading lock is used
     lock = Lock()
     _value: int = 0
 
@@ -12,17 +12,15 @@ class GlobalCounter:
         increment_done = False
 
         while not increment_done:
-            # from python docs
-            # `The return value is True if the lock is
-            #     acquired successfully, False if not.`
-            increment_done = cls.lock.acquire(blocking=True)
+            lock_acquired = cls.lock.acquire(blocking=True)
 
-            try:
-                cls._value += 1
-            except Exception:
-                increment_done = False
-            finally:
-                cls.lock.release()
+            if lock_acquired:
+                try:
+                    cls._value += 1
+                finally:
+                    cls.lock.release()
+
+            increment_done = lock_acquired
 
     @classmethod
     def get(cls):
