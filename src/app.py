@@ -1,27 +1,27 @@
-from aiohttp import web as _web
+from aiohttp import web as _server
 
 from src._constants import NESTED_URL_NAME
 from src._constants import NESTED_URL_REGEX
 from src.buissness_logic import create_upstream_request, make_upstream_request
 
-_routes = _web.RouteTableDef()
+_routes = _server.RouteTableDef()
 
 
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
-async def proxy(request: _web.Request) -> _web.Response:
+async def proxy(request: _server.Request) -> _server.Response:
     print("EXECUTING PROXY")
 
     upstream_request = create_upstream_request(request)
     upstream_response = await make_upstream_request(upstream_request)
 
-    return _web.Response(text="Hello, world")
+    return upstream_response
 
 
 # create app
-_app = _web.Application()
+_app = _server.Application()
 # register urls
 _app.add_routes(_routes)
 
 
 def run_app() -> None:
-    _web.run_app(_app)
+    _server.run_app(_app)

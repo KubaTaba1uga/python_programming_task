@@ -1,10 +1,10 @@
-from aiohttp import web as _web
+from aiohttp import web as _server
 
 
 async def convert_request_to_response(
-    request: _web.Request, status_code: int
-) -> _web.Response:
-    return _web.Response(
+    request: _server.Request, status_code: int
+) -> _server.Response:
+    return _server.Response(
         headers=request.headers,
         body=await request.read(),
         status=status_code,
