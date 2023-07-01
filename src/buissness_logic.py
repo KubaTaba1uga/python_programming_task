@@ -1,3 +1,5 @@
+from functools import wraps
+
 from aiohttp import ClientResponse as _ClientResponse
 from aiohttp import request as make_request
 from aiohttp import web as _server
@@ -16,8 +18,19 @@ from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
 from src.utils.request import get_path as get_request_path
 from src.utils.uuid import generate_uuid
+from src.utils.global_counter import GlobalCounter
 
 
+def increment_global_counter(function):
+    @wraps(function)
+    async def wrapped_function(*args, **kwargs):
+        GlobalCounter.increment()
+        return await function(*args, **kwargs)
+
+    return wrapped_function
+
+
+@increment_global_counter
 async def proxy_request_upstream(
     user_request: _server.Request,
 ) -> _server.StreamResponse:
@@ -120,3 +133,20 @@ async def read_client_response_write_server_response(client_response, server_res
 
     async for chunk in client_response.content.iter_chunked(READ_WRITE_CHUNK_SIZE):
         await server_response.write(chunk)
+
+
+def get_global_counter():
+    return GlobalCounter.get()
+
+
+def create_start_time(function):
+    start_time = generate_now()
+
+    def wrapped_function(*args, **kwargs):
+        return function(start_time, *args, **kwargs)
+
+    return wrapped_function
+
+
+def count_time_passed(start_time) -> str:
+    return str(generate_now() - start_time)
