@@ -5,7 +5,6 @@ from src._constants import NESTED_URL_REGEX
 from src._logging import get_app_logger
 from src.buissness_logic import proxy_request_upstream
 
-
 _routes = _server.RouteTableDef()
 
 
