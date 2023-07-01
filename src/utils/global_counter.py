@@ -13,7 +13,8 @@ class GlobalCounter:
 
         while not increment_done:
             # from python docs
-            # `The return value is True if the lock is acquired successfully, False if not.`
+            # `The return value is True if the lock is
+            #     acquired successfully, False if not.`
             increment_done = cls.lock.acquire(blocking=True)
 
             try:

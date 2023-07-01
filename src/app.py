@@ -2,13 +2,10 @@ from aiohttp import web as _server
 
 from src._constants import APP_PORT
 from src._logging import get_access_logger
-from src.buissness_logic import (
-    proxy_request_upstream,
-    get_global_counter,
-    create_start_time,
-    count_time_passed,
-)
-
+from src.buissness_logic import count_time_passed
+from src.buissness_logic import create_start_time
+from src.buissness_logic import get_global_counter
+from src.buissness_logic import proxy_request_upstream
 
 _routes = _server.RouteTableDef()
 _app = _server.Application()

@@ -6,7 +6,6 @@
 from aiohttp import request as make_request
 
 from src._constants import JWT_HEADER_NAME
-
 from tests.utils.url import get_proxy_url
 
 

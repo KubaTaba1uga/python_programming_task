@@ -6,9 +6,7 @@
 from aiohttp import request as make_request
 
 from src._constants import JWT_HEADER_NAME
-
 from tests.utils.url import get_proxy_url
-from src.buissness_logic import get_global_counter
 
 
 async def test_status_e2e():

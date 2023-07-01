@@ -15,10 +15,10 @@ from src._constants import URL_NOTATION
 from src.utils.datetime import format_datetime_date
 from src.utils.datetime import generate_now
 from src.utils.datetime import generate_seconds_since_epoch
+from src.utils.global_counter import GlobalCounter
 from src.utils.jwt import generate_jwt
 from src.utils.request import get_path as get_request_path
 from src.utils.uuid import generate_uuid
-from src.utils.global_counter import GlobalCounter
 
 
 def increment_global_counter(function):
