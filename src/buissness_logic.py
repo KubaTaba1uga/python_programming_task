@@ -1,6 +1,6 @@
-from aiohttp import web as _server
 from aiohttp import ClientResponse as _ClientResponse
 from aiohttp import request as make_request
+from aiohttp import web as _server
 from multidict import CIMultiDict
 
 from src._constants import HEX_STRING_SECRET
@@ -14,14 +14,13 @@ from src.utils.datetime import format_datetime_date
 from src.utils.datetime import generate_now
 from src.utils.datetime import generate_seconds_since_epoch
 from src.utils.jwt import generate_jwt
-from src.utils.request import clone as clone_request
 from src.utils.request import get_path as get_request_path
 from src.utils.uuid import generate_uuid
 
 
 async def proxy_request_upstream(
     user_request: _server.Request,
-) -> _server.Response:
+) -> _server.StreamResponse:
     # Normally I would split this function into two smaller ones
     #   (`make request upstream` & `forward uptream response`)
     #   but I want to use client while I'm using upstream connection.
@@ -106,7 +105,7 @@ def generate_today_date() -> str:
 
 def convert_client_response_to_server_response(
     client_response: _ClientResponse,
-) -> _server.Response:
+) -> _server.StreamResponse:
     return _server.StreamResponse(
         status=client_response.status,
         reason=client_response.reason,
@@ -117,7 +116,7 @@ def convert_client_response_to_server_response(
 async def read_client_response_write_server_response(client_response, server_response):
     """Reads client's response body in chunkes. Writes each chunk to
     server's response body."""
-    READ_SEND_CHUNK_SIZE = 1024
+    READ_WRITE_CHUNK_SIZE = 1024
 
-    async for chunk in client_response.content.iter_chunked(READ_SEND_CHUNK_SIZE):
+    async for chunk in client_response.content.iter_chunked(READ_WRITE_CHUNK_SIZE):
         await server_response.write(chunk)
