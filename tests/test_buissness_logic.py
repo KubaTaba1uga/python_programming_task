@@ -77,5 +77,5 @@ def test_generate_upstream_headers():
     assert received_value == expected_value
 
 
-# create_upstream_request is tested in test_proxy.py
-# mocking request would be too time consuming.
+# part responsible for talking with upstream is tested in test_proxy.py
+# mocking requests would be too time consuming.

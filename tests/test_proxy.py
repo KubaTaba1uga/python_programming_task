@@ -1,70 +1,34 @@
+""" Before testing this file execute on one terminal:
+        `make build & make run`
+    Then on the other terminal, execute:
+        `make test`
+"""
+
 from unittest.mock import patch, MagicMock
 
-from aiohttp.client_exceptions import ServerDisconnectedError
+from aiohttp import request as make_request
 
-from src._constants import UPSTREAM_IP_OR_FQDN
-from src._constants import UPSTREAM_PORT
-from src._constants import UPSTREAM_SCHEME
+from src._constants import URL_NOTATION, JWT_HEADER_NAME
 
 
-# async def test_proxy_e2e(cli):
-#     make_request_mock_error = NotImplementedError
-#     expected_headers = {"abc": "xyz", "kuba": "is me"}
-
-#     # async def test(upstream_request, _):
-#     #     assert UPSTREAM_IP_OR_FQDN in str(upstream_request.url)
-#     #     assert UPSTREAM_PORT in str(upstream_request.url)
-#     #     assert str(upstream_request.url).startswith(UPSTREAM_SCHEME)
-#     #     mock()
-
-#     with patch(
-#         "src.buissness_logic.make_request",
-#         MagicMock(side_effect=make_request_mock_error),
-#     ) as make_request_mock:
-#         try:
-#             await cli.post("/", headers=expected_headers)
-#         except make_request_mock_error:
-#             pass
-
-#         make_request_mock.assert_called_once_with(headers=expected_headers)
-#         print(dir(make_request_mock))
-
-#     assert False
+def get_proxy_url(path):
+    return URL_NOTATION.format(scheme="http", host="127.0.0.1", port="8080", path=path)
 
 
-async def test_proxy_e2e(cli):
-    expected_headers = {"abc": "xyz", "kuba": "is me"}
+async def test_proxy_e2e():
+    expected_headers = {"abc": "xyz", "kuba": "it's me"}
+    expected_path = "abcbcbc"
+    expected_method = "post"
+    expected_url = get_proxy_url(expected_path)
 
-    response = MagicMock()
+    async with make_request(
+        url=expected_url,
+        headers=expected_headers,
+        method=expected_method,
+    ) as resp:
+        assert resp.status == 200
+        assert resp.headers.get(JWT_HEADER_NAME) is not None
+        assert str(resp.url) == expected_url
 
-    def mock_make_request(headers, *args, **kwargs):
-        response.status = 200
-        response.reason = None
-        response.headers = headers
-
-    with patch("src.buissness_logic.make_request", lambda *args, **kwargs: response):
-        resp = await cli.post("/", headers=expected_headers)
-
-    assert resp.status == 200
-
-
-#     # async def test(upstream_request, _):
-#     #     assert UPSTREAM_IP_OR_FQDN in str(upstream_request.url)
-#     #     assert UPSTREAM_PORT in str(upstream_request.url)
-#     #     assert str(upstream_request.url).startswith(UPSTREAM_SCHEME)
-#     #     mock()
-
-#     assert False
-
-# import asyncio
-# import aiohttp
-# from aioresponses import aioresponses
-
-
-# def test_ctx(cli):
-#     loop = asyncio.get_event_loop()
-#     session = aiohttp.ClientSession()
-#     with aioresponses() as mocked:
-#         mocked.post("http://example.com")
-
-#         resp = loop.run_until_complete(cli.post("/"))
+        for header, value in expected_headers.items():
+            assert resp.headers[header] == value
