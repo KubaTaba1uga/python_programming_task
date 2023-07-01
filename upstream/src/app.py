@@ -1,8 +1,5 @@
 from aiohttp import web as _server
 
-from src._constants import NESTED_URL_NAME
-from src._constants import NESTED_URL_REGEX
-from src._constants import PROXY_STATUS_CODE
 from src.buissness_logic import convert_request_to_response
 
 _routes = _server.RouteTableDef()
