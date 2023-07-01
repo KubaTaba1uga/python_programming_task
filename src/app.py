@@ -7,16 +7,16 @@ from src.buissness_logic import create_start_time
 from src.buissness_logic import get_global_counter
 from src.buissness_logic import proxy_request_upstream
 
-_routes = _server.RouteTableDef()
-_app = _server.Application()
+_routes, _app = _server.RouteTableDef(), _server.Application()
 
 
 @_routes.get("/status")
-async def status(request: _server.Request) -> _server.Response:
+async def status(_: _server.Request) -> _server.Response:
     json_data = {
         "processed_requests": get_global_counter(),
         "elapsed_time": count_time_passed(_app["start_time"]),
     }
+
     return _server.json_response(json_data)
 
 
