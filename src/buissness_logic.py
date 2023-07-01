@@ -91,10 +91,10 @@ async def make_upstream_request(request: _server.Request) -> _server.Response:
 
     upstream_response, body = await make_request(request, upstream_url)
 
-    return await convert_client_response_to_server_response(upstream_response, body)
+    return convert_client_response_to_server_response(upstream_response, body)
 
 
-async def convert_client_response_to_server_response(
+def convert_client_response_to_server_response(
     response: _ClientResponse, body: bytes
 ) -> _server.Response:
     return _server.Response(

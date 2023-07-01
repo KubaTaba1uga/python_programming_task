@@ -23,9 +23,20 @@ async def make(request, url):
         headers=request.headers,
         cookies=request.cookies,
     ) as response:
-        # reading everything into memory is a terrible idea
+        # Reading everything into memory is a terrible idea.
+        # What I would like to do is keeping upstream connection open
+        #  while writing response body to user. Each chunk which has
+        #  been read from upstream would be transmitted to user right
+        #  away (no need for buffer).
         # TO-DO
-        #  read by chunk
+        #  make request to upstream
+        #  create user response
+        #  prepare user response
+        #  iterate over upstream response body chunkes
+        #    read chunk from upstream
+        #    send chunk to user
+        #  close upstream connection
+
         response_body = await get_data(response)
 
         return response, response_body
