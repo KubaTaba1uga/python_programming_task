@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime
 from unittest.mock import MagicMock
 from unittest.mock import patch
@@ -68,7 +69,7 @@ def test_generate_upstream_headers():
 
     JWT, request.headers = "whatever", {"foo": "bar", "bar": "foo"}
 
-    expected_value = request.headers
+    expected_value = deepcopy(request.headers)
     expected_value[JWT_HEADER_NAME] = JWT
 
     with patch("src.buissness_logic.generate_upstream_jwt", lambda: JWT):
@@ -77,5 +78,5 @@ def test_generate_upstream_headers():
     assert received_value == expected_value
 
 
-# create_upstream_request is tested in test_proxy.py
-# mocking request would be too time consuming.
+# part responsible for talking with upstream is tested in test_proxy.py
+# mocking requests would be too time consuming.

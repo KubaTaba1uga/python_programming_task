@@ -25,7 +25,9 @@ format:
 	python -m isort $(sources)
 
 test:
+	sudo docker-compose up -d
 	python -m pytest -vv
+	sudo docker-compose down
 
 venv:
 	python3 -m virtualenv $(venv_name)
