@@ -38,7 +38,7 @@ async def proxy_request_upstream(
     async with make_request(
         method=user_request.method,
         url=upstream_url,
-        data=user_request.content if user_request,
+        data=user_request.content if user_request.can_read_body else None,
         headers=generate_upstream_headers(user_request),
         cookies=user_request.cookies,
     ) as upstream_response:
