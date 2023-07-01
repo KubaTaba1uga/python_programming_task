@@ -12,7 +12,7 @@ _routes = _server.RouteTableDef()
 
 @_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
 async def proxy(request: _server.Request) -> _server.Response:
-    print("EXECUTING PROXY")
+    print("EXECUTING PROXY", request)
 
     upstream_request, user_request = create_upstream_request(request), request
 
@@ -20,9 +20,7 @@ async def proxy(request: _server.Request) -> _server.Response:
         upstream_request, user_request
     )
 
-    # await upstream_response.prepare(request)
-
-    print("PROXY EXECUTED", flush=True)
+    print("PROXY EXECUTED", user_response, flush=True)
 
     return user_response
 

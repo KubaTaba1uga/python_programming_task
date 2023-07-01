@@ -8,9 +8,9 @@ from src.buissness_logic import convert_request_to_response
 _routes = _server.RouteTableDef()
 
 
-@_routes.post("/{" + NESTED_URL_NAME + ":" + NESTED_URL_REGEX + "}")
-async def proxy(request: _server.Request) -> _server.Response:
-    return await convert_request_to_response(request, PROXY_STATUS_CODE)
+@_routes.post("/")
+async def upstream(request: _server.Request) -> _server.Response:
+    return await convert_request_to_response(request, 200)
 
 
 # create app

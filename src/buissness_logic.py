@@ -84,12 +84,6 @@ async def make_upstream_request_and_send_user_response(
     upstream_request: _server.Request,
     user_request: _server.Request,
 ) -> _server.Response:
-    """Reading everything into memory is a terrible idea.
-    I'm keeping upstream connection open while writing response body to user.
-    Each chunk which has been read from upstream is transmitted to user right
-    away (no need for buffer).
-    """
-
     upstream_url = URL_NOTATION.format(
         scheme=UPSTREAM_SCHEME,
         host=UPSTREAM_IP_OR_FQDN,
@@ -108,8 +102,9 @@ async def make_upstream_request_and_send_user_response(
 
         await user_response.prepare(user_request)
 
-        async for chunk in upstream_response.content.iter_chunked(1024):
-            await user_response.write(chunk)
+        await read_client_response_write_server_response(
+            upstream_response, user_response
+        )
 
     return user_response
 
@@ -122,3 +117,12 @@ def convert_client_response_to_server_response(
         reason=client_response.reason,
         headers=client_response.headers,
     )
+
+
+async def read_client_response_write_server_response(client_response, server_response):
+    """Reads client's response body in chunkes. Writes each chunk to
+    server's response body."""
+    READ_SEND_CHUNK_SIZE = 1024
+
+    async for chunk in client_response.content.iter_chunked(READ_SEND_CHUNK_SIZE):
+        await server_response.write(chunk)
