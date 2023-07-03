@@ -10,33 +10,43 @@ from src.buissness_logic import generate_unique_value
 from src.buissness_logic import generate_upstream_headers
 from src.buissness_logic import generate_upstream_jwt
 from src.buissness_logic import increment_global_counter
+from src.buissness_logic import get_global_count
+from src.buissness_logic import convert_client_response_to_server_response
+from src.buissness_logic import count_time_passed
 from src.utils.global_counter import GlobalCounter
 
 
-def test_generate_today_date():
-    now, expected_value = datetime(1970, 1, 1), "1970-01-01"
+# `proxy_request_upstream` is tested in `test_proxy.py:test_proxy_e2e`.
+# `read_client_response_write_server_response` is tested in `test_proxy.py:test_proxy_e2e_json`.
 
-    with patch("src.buissness_logic.generate_now", lambda: now):
-        received_value = generate_today_date()
+
+async def test_increment_global_counter():
+    expected_value = GlobalCounter.get() + 7
+
+    @increment_global_counter
+    async def dummy_func():
+        pass
+
+    for _ in range(expected_value):
+        await dummy_func()
+
+    received_value = GlobalCounter.get()
 
     assert received_value == expected_value
 
 
-def test_generate_unique_value():
-    NUMBER_OF_TESTS = 100000
+def test_generate_upstream_headers():
+    request = MagicMock()
 
-    # test optimized for efficiency
-    unique_values = set()
-    for _ in range(NUMBER_OF_TESTS):
-        potentially_unique_value = generate_unique_value()
+    JWT, request.headers = "whatever", {"foo": "bar", "bar": "foo"}
 
-        before_add_size = len(unique_values)
+    expected_value = deepcopy(request.headers)
+    expected_value[JWT_HEADER_NAME] = JWT
 
-        unique_values.add(potentially_unique_value)
+    with patch("src.buissness_logic.generate_upstream_jwt", lambda: JWT):
+        received_value = generate_upstream_headers(request)
 
-        after_add_size = len(unique_values)
-
-        assert before_add_size != after_add_size
+    assert received_value == expected_value
 
 
 def test_generate_upstream_jwt():
@@ -66,33 +76,58 @@ def test_generate_upstream_jwt():
     assert received_claims == expected_claims
 
 
-def test_generate_upstream_headers():
-    request = MagicMock()
+def test_generate_unique_value():
+    NUMBER_OF_TESTS = 100000
 
-    JWT, request.headers = "whatever", {"foo": "bar", "bar": "foo"}
+    # test optimized for efficiency
+    unique_values = set()
+    for _ in range(NUMBER_OF_TESTS):
+        potentially_unique_value = generate_unique_value()
 
-    expected_value = deepcopy(request.headers)
-    expected_value[JWT_HEADER_NAME] = JWT
+        before_add_size = len(unique_values)
 
-    with patch("src.buissness_logic.generate_upstream_jwt", lambda: JWT):
-        received_value = generate_upstream_headers(request)
+        unique_values.add(potentially_unique_value)
 
-    assert received_value == expected_value
+        after_add_size = len(unique_values)
+
+        assert before_add_size != after_add_size
 
 
-async def test_increment_global_counter():
-    expected_value = GlobalCounter.get() + 7
+def test_generate_today_date():
+    now, expected_value = datetime(1970, 1, 1), "1970-01-01"
 
-    @increment_global_counter
-    async def dummy_func():
-        pass
-
-    for _ in range(expected_value):
-        await dummy_func()
-
-    received_value = GlobalCounter.get()
+    with patch("src.buissness_logic.generate_now", lambda: now):
+        received_value = generate_today_date()
 
     assert received_value == expected_value
+
+
+def test_convert_client_response_to_server_response():
+    CLIENT_ATTRS_VALUES_MAP = {
+        "status": 200,
+        "reason": "no reason",
+        "headers": {"foo": "bar"},
+    }
+
+    client_response = MagicMock(**CLIENT_ATTRS_VALUES_MAP)
+
+    server_response = convert_client_response_to_server_response(client_response)
+
+    for attr, value in CLIENT_ATTRS_VALUES_MAP.items():
+        assert getattr(server_response, attr) == value
+
+
+def test_get_global_count():
+    expexcted_value = 7
+
+    expexcted_value_ = expexcted_value + GlobalCounter.get()
+
+    for _ in range(expexcted_value):
+        GlobalCounter.increment()
+
+    received_value = get_global_count()
+
+    assert received_value == expexcted_value_
 
 
 async def test_create_start_time():
@@ -110,5 +145,12 @@ async def test_create_start_time():
     mock.assert_called_with(expected_value)
 
 
-# part responsible for talking with upstream is tested in test_proxy.py
-# mocking requests would be too time consuming.
+def test_count_time_passed():
+    expected_value, input_date = "764 days, 0:00:00", datetime(1981, 1, 1)
+
+    now = datetime(1983, 2, 4)
+
+    with patch("src.buissness_logic.generate_now", lambda: now):
+        received_value = count_time_passed(input_date)
+
+        assert received_value == expected_value

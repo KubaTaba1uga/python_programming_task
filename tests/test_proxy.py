@@ -28,7 +28,7 @@ async def test_proxy_e2e():
             assert resp.headers[header] == value
 
 
-async def test_proxy_e2e_body():
+async def test_proxy_e2e_json():
     expected_headers = {"abc": "xyz", "kuba": "it's me"}
     expected_path = "abcbcbc"
     expected_method = "post"

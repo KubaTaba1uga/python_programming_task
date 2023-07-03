@@ -1,3 +1,4 @@
+import typing
 from functools import wraps
 
 from aiohttp import ClientResponse as _ClientResponse
@@ -19,6 +20,9 @@ from src.utils.global_counter import GlobalCounter
 from src.utils.jwt import generate_jwt
 from src.utils.request import get_path as get_request_path
 from src.utils.uuid import generate_uuid
+
+if typing.TYPE_CHECKING:
+    from datetime import datetime
 
 
 def increment_global_counter(function):
@@ -74,7 +78,7 @@ def generate_upstream_headers(request: _server.Request) -> CIMultiDict:
     return mutable_headers
 
 
-def generate_upstream_jwt():
+def generate_upstream_jwt() -> str:
     jwt_claims = {
         # satisfies task requirement for `jti`
         "jti": generate_unique_value(),
@@ -120,7 +124,9 @@ def convert_client_response_to_server_response(
     )
 
 
-async def read_client_response_write_server_response(client_response, server_response):
+async def read_client_response_write_server_response(
+    client_response: _ClientResponse, server_response: _server.StreamResponse
+):
     """Reads client's response body in chunkes. Writes each chunk to
     server's response body."""
     READ_WRITE_CHUNK_SIZE = 1024
@@ -129,18 +135,19 @@ async def read_client_response_write_server_response(client_response, server_res
         await server_response.write(chunk)
 
 
-def get_requests_counter() -> int:
+def get_global_count() -> int:
     return GlobalCounter.get()
 
 
 def create_start_time(function):
     start_time = generate_now()
 
+    @wraps(function)
     def wrapped_function(*args, **kwargs):
         return function(start_time, *args, **kwargs)
 
     return wrapped_function
 
 
-def count_time_passed(start_time) -> str:
-    return str(generate_now() - start_time)
+def count_time_passed(dtime: "datetime") -> str:
+    return str(generate_now() - dtime)
