@@ -40,9 +40,9 @@ Creating custom upstream is my choice mainly to make e2e tests easier and quicke
 1. App boot itself <br> 
   1.1 App adds current time into it's config <br> 
   1.2 App proceeds further with booting <br> 
-2. User makes http request
-  2.1 App increment requests counter
-  2.2 App proceeds furter with proxying
+2. User makes http request  <br> 
+  2.1 App increment requests counter  <br> 
+  2.2 App proceeds furter with proxying  <br> 
 
 ### Large Files Handling
 What happens when large file read to memory
