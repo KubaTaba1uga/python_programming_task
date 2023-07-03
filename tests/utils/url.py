@@ -1,13 +1,8 @@
-# mypy: ignore-errors
 import os
-
-from dotenv import load_dotenv
 
 from src._constants import URL_NOTATION
 
-load_dotenv()
-
-HOST_PORT = os.environ.get("HTTP_PORT", 8080)
+HOST_PORT = os.environ["HTTP_PORT"]
 
 
 def get_proxy_url(path):

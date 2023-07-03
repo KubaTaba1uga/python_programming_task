@@ -27,6 +27,7 @@ install-dev:
 	pip install -r $(requirements_dev_files)
 
 test:
+	while read line; do export $line; done < .env
 	sudo docker-compose up -d
 	python -m pytest -vv
 	sudo docker-compose down

@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+# I couldn't find any stubs to this module
 from dotenv import load_dotenv
 
 
