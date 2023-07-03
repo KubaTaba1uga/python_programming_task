@@ -1,11 +1,5 @@
 # Python Programming Task
 
-## Intro
-
-My solution goals are: robustness and development time.
-
-To achive that I: want to write as little code as it is possible. All tasks besides buissness logic will be provided by external packages.
-
 ## Solution
 
 ### Glossary
@@ -25,10 +19,10 @@ Creating custom upstream is my choice mainly to make e2e tests easier and quicke
    1. receive post request
    2. respond with the same payload as in post request
 
-### Alghoritm
+### Steps
 
 #### Proxy
- 1. User makes http request <br>
+1. User makes http request <br>
   1.1 User makes http request to the app <br>
   1.2 App receives http request <br>
  2. App proxy http request  
@@ -42,11 +36,13 @@ Creating custom upstream is my choice mainly to make e2e tests easier and quicke
   3.2 App sends http response to the user <br>
   3.3 User receives http response <br>
 
-I'll go for all bonus points ;)
-
-###TO-DO
-1. write 2.1 in details
-2. write 2.2 in details
+#### Status
+1. App boot itself <br> 
+  1.1 App adds current time into it's config <br> 
+  1.2 App proceeds further with booting <br> 
+2. User makes http request
+  2.1 App increment requests counter
+  2.2 App proceeds furter with proxying
 
 ### Large Files Handling
 What happens when large file read to memory
