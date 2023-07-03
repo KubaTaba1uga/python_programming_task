@@ -1,8 +1,3 @@
-""" Before testing this file, execute on one terminal:
-        `make build & make run`
-    Then on the other terminal, execute:
-        `make test`
-"""
 from aiohttp import request as make_request
 
 from src._constants import JWT_HEADER_NAME
