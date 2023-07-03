@@ -88,8 +88,11 @@ def generate_upstream_jwt() -> bytes:
             # satisfies task requirement for `payload`.
             #  Propably `user` should be logged in username
             #  but that would require sharing db with upstream.
+            #  I can get user from BasicAuth but without
+            #  db i don't see a point.
             #  I want to keep things simple for POC.
             #  TO-DO
+            #  - authentication mechanism
             #  - get logged in `user` from request
             "user": "username",
             "date": generate_today_date(),
