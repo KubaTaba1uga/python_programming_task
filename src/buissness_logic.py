@@ -34,12 +34,6 @@ def increment_global_counter(function):
 async def proxy_request_upstream(
     user_request: _server.Request,
 ) -> _server.StreamResponse:
-    # Normally I would split this function into two smaller ones
-    #   (`make request upstream` & `forward uptream response`)
-    #   but I want to use client while I'm using upstream connection.
-    #   Propably there is some way to do not close a connection
-    #   and hand it over to other function but couldn't find it.
-
     upstream_url = URL_NOTATION.format(
         scheme=UPSTREAM_SCHEME,
         host=UPSTREAM_IP_OR_FQDN,
@@ -135,7 +129,7 @@ async def read_client_response_write_server_response(client_response, server_res
         await server_response.write(chunk)
 
 
-def get_global_counter() -> int:
+def get_requests_counter() -> int:
     return GlobalCounter.get()
 
 
