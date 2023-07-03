@@ -5,19 +5,19 @@ from unittest.mock import patch
 
 import tests.utils.jwt as jwt_utils
 from src._constants import JWT_HEADER_NAME
+from src.buissness_logic import convert_client_response_to_server_response
+from src.buissness_logic import count_time_passed
 from src.buissness_logic import generate_today_date
 from src.buissness_logic import generate_unique_value
 from src.buissness_logic import generate_upstream_headers
 from src.buissness_logic import generate_upstream_jwt
-from src.buissness_logic import increment_global_counter
 from src.buissness_logic import get_global_count
-from src.buissness_logic import convert_client_response_to_server_response
-from src.buissness_logic import count_time_passed
+from src.buissness_logic import increment_global_counter
 from src.utils.global_counter import GlobalCounter
 
-
 # `proxy_request_upstream` is tested in `test_proxy.py:test_proxy_e2e`.
-# `read_client_response_write_server_response` is tested in `test_proxy.py:test_proxy_e2e_json`.
+# `read_client_response_write_server_response` is tested in
+#                                  `test_proxy.py:test_proxy_e2e_json`.
 
 
 async def test_increment_global_counter():
