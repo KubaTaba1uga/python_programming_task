@@ -1,5 +1,7 @@
 sources := src tests upstream
 services := app upstream
+requirements_files := requirements.txt
+requirements_dev_files := dev-requirements.txt
 
 help:
 	@echo "lint - check style with ruff and mypy"
@@ -19,10 +21,10 @@ format:
 	python -m isort $(sources)
 
 install: 
-	pip install .
+	pip install -r $(requirements_files)
 
 install-dev: 
-	pip install -e .[dev]
+	pip install -r $(requirements_dev_files)
 
 test:
 	sudo docker-compose up -d

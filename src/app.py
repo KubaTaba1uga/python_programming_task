@@ -6,6 +6,7 @@ from src.buissness_logic import count_time_passed
 from src.buissness_logic import create_start_time
 from src.buissness_logic import get_global_count
 from src.buissness_logic import proxy_request_upstream
+from src.utils.env import load_environment_variables
 
 _routes, _app = _server.RouteTableDef(), _server.Application()
 
@@ -31,6 +32,8 @@ _app.add_routes(_routes)
 
 @create_start_time
 def run_app(start_time) -> None:
+    load_environment_variables()
+
     _app["start_time"] = start_time
     _server.run_app(
         _app,

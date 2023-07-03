@@ -73,12 +73,12 @@ def generate_upstream_headers(request: _server.Request) -> CIMultiDict:
     # that's why CIMultiDict is used directly
 
     for header, value in NEW_HEADERS_VALUES_MAP.items():
-        mutable_headers[header] = value
+        mutable_headers[header] = value  # type: ignore
 
     return mutable_headers
 
 
-def generate_upstream_jwt() -> str:
+def generate_upstream_jwt() -> bytes:
     jwt_claims = {
         # satisfies task requirement for `jti`
         "jti": generate_unique_value(),
